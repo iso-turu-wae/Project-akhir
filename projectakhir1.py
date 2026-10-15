@@ -47,6 +47,16 @@ def detekinput(wm):
         except ValueError as e:
             print(e)
 
+def detekangka(wm, minimal = 0):
+    while True:
+        try:
+            angka = int(input(wm))
+            if angka >= minimal:
+                return angka
+            print("Ketik angka disini {minimal}!")
+        except ValueError:
+            print("Input nya angka, hadehh....")
+        
 def konfirmasi(ipanbencib):
     while True:
         jawab = input(f"{ipanbencib} (y/n): ").lower()
