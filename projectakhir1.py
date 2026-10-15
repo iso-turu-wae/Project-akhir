@@ -123,3 +123,66 @@ def registrasi(users):
     except FileNotFoundError:
         print("File user tidak ditemukan, registrasi gagal....")
     return users
+def login(users):
+    print("===== LOGIN =====")
+    for ipanbenciben in range(1, 4):
+        username = input("Username: ")
+        password = pwinput.pwinput("Password: ")
+        for u in users:
+            if u["username"] == username and u["password"] == password:
+                print(f"Selamat datang, {username} 😊")
+                return u
+        print(f"Username/password salah! percobaan {ipanbenciben}/3")
+    print("Login gagal 3 kali kembali ke menu utama.....")
+    return None
+
+#   ADMIN CRUD (Biar gklupa wkwk)
+def addjadwal(jadwalss):
+    print("=== TAMBAH JADWAL ===")
+    tikets = detekinput("Tiket kereta: ").upper()
+    if deteksiuser(jadwalss, "Tiket", tikets):
+        print("Kode sudah ada!")
+        return jadwalss
+    nama = detekinput("Nama kereta: ")
+    Dari = detekinput("Stasiun Dari: ")
+    tujuan = detekinput("Stasiun tujuan: ")
+    jam = detekinput("Jam berangkat (HH:MM): ")
+    for i, k in enumerate(KelasTiket, 1):
+        print(f"{i}. {k}")
+    pilih = detekangka("Pilih kelas: ", 1)
+    if pilih > len(KelasTiket):
+        print("Pilihan kelas tidak valid....")
+        return jadwalss
+    harga = detekangka("Harga tiket: ", 1)
+    stok = detekangka("Stok kursi: ", 0)
+    jadwalss.append({"Tiket": tikets, "nama": nama, "Dari": Dari, "tujuan": tujuan,
+                     "jam": jam, "kelas": KelasTiket[pilih - 1], "harga": harga, "stok": stok})
+    savedata(FileJadwall, jadwalss)
+    print("Jadwal berhasil ditambahkan.")
+    return jadwalss
+
+def ubahjadwal(ipansukablame):
+    print("==== UBAH JADWAL ====")
+    tampilanJadwal(ipansukablame)
+    o = deteksiuser(ipansukablame, "Tiket", detekinput("Tiket kereta yang mau di reschedule"))
+    if not o:
+        print("Tiket tidak ditemukan😞")
+        return ipansukablame
+    print("Kosongkan input jika tidak ingin mengubah.....")
+    for field, label in (("nama", "Nama"), ("asal", "Asal"), ("tujuan", "Tujuan"), ("jam", "Jam")):
+        baru = input(f"{label} [{o[field]}]: ")
+        if baru:
+            o[field] = baru
+    for field, label in (("harga", "Harga"), ("stok", "Stok")):
+        baru = input(f"{label} [{o[field]}]: ")
+        if baru:
+            try:
+                nilai = int(baru)
+                if nilai < 0 or (field == "harga" and nilai == 0):
+                    raise ValueError
+                o[field] = nilai
+            except ValueError:
+                print(f"{label} tidak valid, tidak diubah.")
+    savedata(FileJadwall, ipansukablame)
+    print("Jadwal berhasil diubah.....")
+    return ipansukablame
